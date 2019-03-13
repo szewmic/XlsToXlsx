@@ -1,48 +1,34 @@
-# Meetup
+# XLS to XLSX Converter!
 
-Calculate the date of meetups.
+Hi! I've created this app for my current work place, because we had trouble with a lot of files saved in old .xls format instead of much lighter .xlsx. 
 
-Typically meetups happen on the same day of the week.  In this exercise, you
-will take a description of a meetup date, and return the actual meetup date.
+Application is pretty simple and use Microsoft Excels Interop so **you need to have Microsoft Excel** installed on your workstation. 
 
-Examples of general descriptions are:
+Technologies used here are: **C# .NET, WinForms** GUI and simple **SmartUI** design pattern.
 
-- The first Monday of January 2017
-- The third Tuesday of January 2017
-- The wednesteenth of January 2017
-- The last Thursday of January 2017
+## Problem
+We had hundreds of .xls files on our network disc with weight up to **80 MB** each! Opening manually everyone of them and saving with newer format would take us enormous amount of time.
 
-The descriptors you are expected to parse are:
-first, second, third, fourth, fifth, last, monteenth, tuesteenth, wednesteenth,
-thursteenth, friteenth, saturteenth, sunteenth
+## Solution
+Simple Application with needed for us functionallity. That searches selected folder and all of his subfolders for files with ".xls" extension then converting them to ".xlsx" extensions.
 
-Note that "monteenth", "tuesteenth", etc are all made up words. There was a
-meetup whose members realized that there are exactly 7 numbered days in a month
-that end in '-teenth'. Therefore, one is guaranteed that each day of the week
-(Monday, Tuesday, ...) will have exactly one date that is named with '-teenth'
-in every month.
+Since I couldn't find any good free library that can help me with changing extensions, I decided to use Microsoft Excels Interop.
 
-Given examples of a meetup dates, each containing a month, day, year, and
-descriptor calculate the date of the actual meetup.  For example, if given
-"The first Monday of January 2017", the correct meetup date is 2017/1/2.
+**Running this application on our network locations reduced the used disc space up to 50%!**
 
-## Running the tests
+# Application functionallity
+![alt text](https://i.ibb.co/RPcnmvS/xlstoxlsxappimg.png)
 
-To run the tests, run the command `dotnet test` from within the exercise directory.
+Functionallity includes:
+- selecting path to folder which folders and subfolders will be searched for ".xls" extension files,
+- decide minimum weight from which files will be converted (no point to convert already leighweight files),
+- checkbox to decide if you want delete previous ".xls" files or just let them be
+- progress bar obviously shows you improvment in converting task.
 
-Initially, only the first test will be enabled. This is to encourage you to solve the exercise one step at a time.
-Once you get the first test passing, remove the `Skip` property from the next test and work on getting that test passing.
-Once none of the tests are skipped and they are all passing, you can submit your solution 
-using `exercism submit Meetup.cs`
+After process is done you will get **Log file** with .txt extension. That looks like this:
+![alt text](https://i.ibb.co/6JVqywv/logimg.png)
+And contains informations about every new succesfully created ".xlsx" file and every optionally deleted ".xls" file. It shows also information about their weights and the if you selected option to remove old ".xls" files **you will get info about how much space on disc you gained!**
 
-## Further information
 
-For more detailed information about the C# track, including how to get help if
-you're having trouble, please visit the exercism.io [C# language page](http://exercism.io/languages/csharp/resources).
-
-## Source
-
-Jeremy Hinegardner mentioned a Boulder meetup that happens on the Wednesteenth of every month [https://twitter.com/copiousfreetime](https://twitter.com/copiousfreetime)
-
-## Submitting Incomplete Solutions
-It's possible to submit an incomplete solution so you can see how others have completed the exercise.
+## Authors
+- Michał Szewczak
