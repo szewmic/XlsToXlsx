@@ -2,18 +2,17 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using XlsToXlsx.Interfaces;
 
 namespace XlsToXlsx
 {
     public partial class MainForm : Form
     {
-        private Transformer transformer;
-        private Logger logger;
-        private string selectedFolderPath;
+        private readonly Transformer transformer;
+
         public MainForm()
         {
-            logger = new Logger();
-            transformer = new Transformer();
+            transformer = new ExcelTransformer();
             InitializeComponent();
         }
 
@@ -25,8 +24,8 @@ namespace XlsToXlsx
             dialog.IsFolderPicker = true;
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                selectedFolderPath = dialog.FileName;
-                label2.Text = "Wybrana ścieżka " + selectedFolderPath;    
+                transformer.MainFolderPath = dialog.FileName;
+                label2.Text = "Wybrana ścieżka " + transformer.MainFolderPath;    
             }
         }
 
@@ -35,7 +34,7 @@ namespace XlsToXlsx
             button2.Enabled = false;
             if (MessageBox.Show("Czy jesteś pewien?", "Potwierdzenie", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (!string.IsNullOrEmpty(selectedFolderPath))
+                if (!string.IsNullOrEmpty(transformer.MainFolderPath))
                 {
 
                     this.progressBar1.Visible = true;
@@ -47,16 +46,15 @@ namespace XlsToXlsx
                         progressBar1.Value = v;
                     });
 
-                    Logger.LogMainFolderPath(selectedFolderPath);
-                    transformer.MainFolderPath = selectedFolderPath;
+                    Logger.getInstance().LogMainFolderPath(transformer.MainFolderPath);
                     transformer.MinLength = Convert.ToInt32(numericUpDown1.Value) * 1000000;
-                    transformer.DeleteXlsFlag = checkBox1.Checked;
+                    transformer.DeleteFileFlag = checkBox1.Checked;
 
                     // Run operation in another thread
-                    await Task.Run(() => transformer.TransformXls_Xlsx(progress));
+                    await Task.Run(() => transformer.Transform(progress));
 
                     // TODO: Do something after all calculations
-                    logger.CreateLogFile();
+                    Logger.getInstance().CreateLogFile();
                     MessageBox.Show("Operacja zakończona pomyślnie!\n Utworzono log na pulpicie!");
 
                     this.progressBar1.Visible = false;
@@ -70,7 +68,7 @@ namespace XlsToXlsx
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (progressBar1.Value < 100 & progressBar1.Value > 0)
+            if (progressBar1.Value > 0 && progressBar1.Value < 100)
             {
                 var app = new Microsoft.Office.Interop.Excel.Application();
                 
@@ -79,7 +77,8 @@ namespace XlsToXlsx
                     w.Close();
                 }
 
-                logger.CreateLogFile();
+                app.Quit();
+                Logger.getInstance().CreateLogFile();
             }
         }
     }

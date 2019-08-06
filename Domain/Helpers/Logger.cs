@@ -8,30 +8,45 @@ using System.Windows.Forms;
 
 namespace XlsToXlsx
 {
-    class Logger
+    public class Logger
     {
-        private static string mainFolderPath;
-        private static List<string> deletedFilePaths = new List<string>();
-        private static List<string> newFilePaths = new List<string>();
-        private static long xlsDeletedWeight = 0;
-        private static long xlsxCreatedWeight = 0;
+        private static Logger uniqueLogger = new Logger();
 
-        public static void LogMainFolderPath(string path)
+        private string mainFolderPath;
+        private List<string> deletedFilePaths;
+        private List<string> newFilePaths;
+        private long xlsDeletedWeight;
+        private long xlsxCreatedWeight;
+
+        private Logger()
+        {
+            deletedFilePaths = new List<string>();
+            newFilePaths = new List<string>();
+            xlsDeletedWeight = 0;
+            xlsxCreatedWeight = 0;
+        }
+
+        public static Logger getInstance()
+        {
+            return uniqueLogger;
+        }
+
+        public void LogMainFolderPath(string path)
         {
             if (!string.IsNullOrEmpty(path))
                 mainFolderPath = path;
         }
-        public static void LogDeletedFilePath(string path)
+        public void LogDeletedFilePath(string path)
         {
             if (!string.IsNullOrEmpty(path))
                 deletedFilePaths.Add(path);
         }
-        public static void LogNewFilePath(string path)
+        public void LogNewFilePath(string path)
         {
             if (!string.IsNullOrEmpty(path))
                 newFilePaths.Add(path);
         }
-        public static void LogXlsDeletedAndXlsxCreatedWeights(long xlsDel, long xlsxCrea) { xlsDeletedWeight = xlsDel; xlsxCreatedWeight = xlsxCrea; }
+        public void LogXlsDeletedAndXlsxCreatedWeights(long xlsDel, long xlsxCrea) { xlsDeletedWeight = xlsDel; xlsxCreatedWeight = xlsxCrea; }
 
         public void CreateLogFile()
         {
@@ -93,6 +108,5 @@ namespace XlsToXlsx
             }
             return section;
         }
-
     }
 }
