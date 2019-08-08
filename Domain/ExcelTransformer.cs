@@ -7,9 +7,9 @@ using XlsToXlsx.Interfaces;
 
 namespace XlsToXlsx
 {
-    class ExcelTransformer : Transformer
+    public class ExcelTransformer : Transformer
     {
-        public ExcelTransformer() { }
+        public ExcelTransformer():base() { }
 
         public override void Transform(IProgress<int> progress)
         {
@@ -33,12 +33,13 @@ namespace XlsToXlsx
                     DeleteOldFile(oldXlsPath, newXlsxPath);
                 }
 
-
                 if (progress != null)
                     progress.Report(progressTotal);
                 progressTotal = progressTotal + progressStep;
             }
-            Logger.getInstance().LogXlsDeletedAndXlsxCreatedWeights(deletedWeight, createdWeight);
+            
+            
+            logger.LogXlsDeletedAndXlsxCreatedWeights(deletedWeight, createdWeight);
 
             createdWeight = 0;
             deletedWeight = 0;
@@ -51,12 +52,25 @@ namespace XlsToXlsx
             try
             {
                 passedWorkbook.SaveAs(Filename: newXlsxPath, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
-                Logger.getInstance().LogNewFilePath(newXlsxPath);
+                logger.LogNewFilePath(newXlsxPath);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+        }
+
+        public override void Interrupt()
+        {
+            var app = new Microsoft.Office.Interop.Excel.Application();
+
+            foreach (Microsoft.Office.Interop.Excel.Workbook w in app.Workbooks)
+            {
+                w.Close();
+            }
+
+            app.Quit();
+            logger.CreateLogFile();
         }
 
     }

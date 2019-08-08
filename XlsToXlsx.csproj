@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Transformer.cs" />
+    <Compile Include="Domain\SimpleTransformerFactory.cs" />
+    <Compile Include="Domain\WordTransformer.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +103,7 @@
     <None Include="Resources\apple.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ToDo.txt" />
     <Content Include="xlsx-icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,1 @@
+﻿// implement word transformer and option in menu to select either word or excel files should be transformed to lighter extension

@@ -8,13 +8,19 @@ using System.Windows.Forms;
 
 namespace XlsToXlsx.Interfaces
 {
-     abstract class Transformer
+     public abstract class Transformer
     {
+        protected readonly Logger logger;
         protected string _mainFolderPath;
         protected int _minLength;
 
         protected long deletedWeight = 0;
         protected long createdWeight = 0;
+
+        public Transformer()
+        {
+            logger = Logger.getInstance();
+        }
 
         public bool DeleteFileFlag { get; set; }
 
@@ -45,6 +51,7 @@ namespace XlsToXlsx.Interfaces
         }
 
         public abstract void Transform(IProgress<int> progress);
+        public abstract void Interrupt();
         protected List<string> LoadFilesPaths(string extensionToLoad)
         {
             DirectoryInfo dir = new DirectoryInfo(_mainFolderPath);
